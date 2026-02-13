@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>For My Gaggo ❤️</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -41,11 +41,11 @@
         #no-btn { position: absolute; left: 55%; transition: 0.1s; }
         #yes-btn { position: absolute; left: 10%; }
         
-        /* Archery Game */
+        /* Archery Game UI */
         #game-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 100; display: none; }
-        #game-ui { position: fixed; top: 30px; width: 100%; text-align: center; color: white; font-size: 22px; z-index: 101; display: none; font-weight: bold; }
+        #game-ui { position: fixed; top: 30px; width: 100%; text-align: center; color: white; font-size: 22px; z-index: 101; display: none; font-weight: bold; text-shadow: 0 0 10px red; }
         
-        .coupon { background: #fff; border: 5px gold double; padding: 30px; border-radius: 20px; text-align: center; color: #8b0000; display: none; z-index: 110; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 400px; box-shadow: 0 0 30px rgba(255,215,0,0.4); }
+        .coupon { background: #fff; border: 5px gold double; padding: 30px; border-radius: 20px; text-align: center; color: #8b0000; display: none; z-index: 110; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 400px; }
     </style>
 </head>
 <body>
@@ -55,8 +55,8 @@
     <div class="part active" id="start-screen" style="background: radial-gradient(circle, #300, #000);">
         <div class="content">
             <h1>Our Love Story ❤️</h1>
-            <p class="type-txt" style="text-align: center;">Click to enter the special world I made for you, Gaggo.</p>
-            <button class="btn" onclick="go()">Start Journey ✨</button>
+            <p class="type-txt" style="text-align: center;">I have made something very special for you Gaggo. Open this letter.</p>
+            <button class="btn" onclick="go()">Open Letter ✉️</button>
         </div>
     </div>
 
@@ -65,7 +65,7 @@
         <div class="content">
             <h1>Our Beginning ❤️</h1>
             <div class="scroll-area"><p class="type-txt" id="m1"></p></div>
-            <button class="btn" id="b1" style="display:none" onclick="nxt('p2', 'v2', 'm2')">Next Memory 👉</button>
+            <button class="btn" id="b1" style="display:none" onclick="nxt('p2', 'v2', 'm2')">Next Memory ❤️</button>
         </div>
     </div>
 
@@ -93,15 +93,13 @@
         </div>
     </div>
 
-    <div id="game-ui">🏹 Score: <span id="score">0</span>/3<br><small style="font-size: 12px; opacity: 0.8;">Tap & Release to Shoot!</small></div>
+    <div id="game-ui">🏹 Score: <span id="score">0</span>/3<br><small style="font-size: 12px;">Drag to Aim & Release!</small></div>
     <canvas id="game-canvas"></canvas>
 
     <div class="coupon" id="final-coupon">
         <h1 style="color: gold; -webkit-text-stroke: 1px #8b0000;">🎟️ COUPON</h1>
-        <p style="margin: 15px 0; font-size: 1.1rem; font-weight: bold;">Congratulations! You won a special date with Jatin.</p>
-        <hr>
-        <p style="margin-top: 10px;"><strong>1 Full Day of Unlimited Hugs & Your Fav Food!</strong></p>
-        <p style="font-size: 0.8rem; margin-top: 10px; color: #555;">Valid Forever ❤️</p>
+        <p style="margin: 15px 0; font-weight: bold;">Congratulations! You won a special date with Jatin.</p>
+        <p><strong>1 Full Day of Unlimited Hugs & Your Fav Food!</strong></p>
     </div>
 
     <script>
@@ -118,10 +116,7 @@
         }
         setInterval(createHeart, 300);
 
-        function go() { 
-            document.getElementById("myMusic").play(); 
-            nxt('p1', 'v1', 'm1'); 
-        }
+        function go() { document.getElementById("myMusic").play(); nxt('p1', 'v1', 'm1'); }
 
         function nxt(pId, vId, mId) {
             document.querySelectorAll('.part').forEach(p => p.classList.remove('active'));
@@ -151,7 +146,7 @@
             b.style.left = Math.random()*70+'%'; b.style.top = Math.random()*70+'%';
         }
 
-        /* Archery Game */
+        /* FIXED ARCHERY GAME WITH MOVING BOW */
         function startArchery() {
             document.getElementById('p3').style.display='none';
             document.getElementById('game-canvas').style.display='block';
@@ -161,35 +156,46 @@
             canvas.width = window.innerWidth; canvas.height = window.innerHeight;
 
             let score = 0, arrows = [], targets = [], isDrawing = false;
-            let bowX = 40, bowY = canvas.height/2;
+            let bowX = 40, bowY = canvas.height / 2;
 
-            function spawnTarget() { targets.push({ x: canvas.width - 60, y: Math.random()*(canvas.height-100)+50, r: 25 }); }
-            setInterval(spawnTarget, 1500);
+            function spawn() { targets.push({ x: canvas.width - 60, y: Math.random()*(canvas.height-100)+50, r: 25 }); }
+            let sInt = setInterval(spawn, 1500);
 
-            canvas.onmousedown = canvas.ontouchstart = () => isDrawing = true;
-            canvas.onmouseup = canvas.ontouchend = () => {
-                if(isDrawing) { arrows.push({ x: bowX, y: bowY }); isDrawing = false; }
+            // Bow follows finger/mouse
+            const updateBow = (e) => {
+                let y = e.touches ? e.touches[0].clientY : e.clientY;
+                bowY = y;
             };
+            canvas.addEventListener('mousemove', updateBow);
+            canvas.addEventListener('touchmove', (e) => { e.preventDefault(); updateBow(e); }, {passive: false});
 
-            function gameLoop() {
+            canvas.onmousedown = canvas.ontouchstart = (e) => { isDrawing = true; updateBow(e); };
+            canvas.onmouseup = canvas.ontouchend = () => { if(isDrawing) { arrows.push({x: bowX, y: bowY}); isDrawing = false; } };
+
+            function loop() {
                 ctx.clearRect(0,0,canvas.width, canvas.height);
-                ctx.strokeStyle = "white"; ctx.lineWidth = 3;
-                ctx.beginPath(); ctx.arc(bowX, bowY, 40, -Math.PI/2, Math.PI/2); ctx.stroke();
+                // Draw Moving Bow
+                ctx.strokeStyle = "white"; ctx.lineWidth = 4;
+                ctx.beginPath(); ctx.arc(bowX, bowY, 45, -Math.PI/2, Math.PI/2); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(bowX, bowY-45); ctx.lineTo(bowX, bowY+45); ctx.stroke();
                 
+                // Draw Arrows
                 arrows.forEach((a, ai) => {
-                    a.x += 12; ctx.fillStyle = "white"; ctx.fillRect(a.x, a.y, 25, 2);
+                    a.x += 15; ctx.fillStyle = "white"; ctx.fillRect(a.x, a.y-1, 30, 3);
                     targets.forEach((t, ti) => {
                         if(Math.hypot(a.x - t.x, a.y - t.y) < t.r + 10) {
                             arrows.splice(ai, 1); targets.splice(ti, 1);
                             score++; document.getElementById('score').innerText = score;
-                            if(score >= 3) { win(); score = -99; }
+                            if(score >= 3) { win(); score = -99; clearInterval(sInt); }
                         }
                     });
+                    if(a.x > canvas.width) arrows.splice(ai, 1);
                 });
-                targets.forEach(t => { ctx.font = "40px serif"; ctx.fillText("❤️", t.x, t.y); });
-                if(score < 3) requestAnimationFrame(gameLoop);
+                // Draw Targets
+                targets.forEach(t => { ctx.font = "40px serif"; ctx.fillText("❤️", t.x, t.y+15); });
+                if(score < 3) requestAnimationFrame(loop);
             }
-            gameLoop();
+            loop();
         }
 
         function win() {
