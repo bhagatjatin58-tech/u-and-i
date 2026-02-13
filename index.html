@@ -8,130 +8,114 @@
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Georgia', serif; background: black; }
         
         .video-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
-        video { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.6); }
+        video { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.4) sepia(20%); }
 
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.2); z-index: 0; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 0; }
 
-        .page { 
-            position: absolute; width: 100%; height: 100%; 
-            display: none; flex-direction: column; align-items: center; 
-            justify-content: center; text-align: center; color: white; 
-            z-index: 10; padding: 30px; box-sizing: border-box; 
-        }
+        .page { position: absolute; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: white; z-index: 10; padding: 20px; box-sizing: border-box; }
         .active { display: flex; }
 
-        h1 { font-size: 2.5rem; margin-bottom: 20px; color: #ffcccc; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
-        .msg-content { 
-            font-size: 1.1rem; line-height: 1.6; max-width: 600px; 
-            background: rgba(0, 0, 0, 0.5); padding: 25px; border-radius: 20px;
-            backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2);
-        }
+        .msg-box { width: 90%; max-width: 600px; max-height: 300px; background: rgba(0, 0, 0, 0.7); padding: 25px; border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(255,192,203,0.3); overflow-y: auto; text-align: left; }
+        .typewriter-text { font-size: 1.1rem; line-height: 1.8; color: #ffcccc; white-space: pre-wrap; }
 
-        .btn { 
-            background: #ff4d4d; color: white; border: none; padding: 15px 35px; 
-            border-radius: 50px; font-size: 18px; cursor: pointer; margin-top: 25px; 
-            box-shadow: 0 5px 15px rgba(255, 77, 77, 0.4); transition: 0.3s;
-        }
-        .btn:hover { background: #ff1a1a; transform: scale(1.05); }
+        .btn { background: #be0000; color: white; border: none; padding: 12px 40px; border-radius: 5px; font-size: 18px; cursor: pointer; margin-top: 25px; display: none; letter-spacing: 2px; }
 
+        /* Game UI */
         canvas { display: none; position: fixed; top: 0; left: 0; z-index: 100; }
-        #score-board { 
-            position: fixed; top: 20px; left: 20px; display: none; 
-            font-size: 22px; color: white; z-index: 110; 
-            background: rgba(255, 77, 77, 0.8); padding: 10px 20px; border-radius: 30px; 
-        }
-        #bucket { 
-            position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); 
-            font-size: 4.5rem; z-index: 105; display: none; pointer-events: none; 
-        }
+        #score-board { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); display: none; font-size: 22px; color: #ffcccc; z-index: 110; text-shadow: 2px 2px 5px black; }
+        #bucket { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%); font-size: 5rem; z-index: 105; display: none; pointer-events: none; }
         
+        /* Final Victory Card */
         #final-coupon { 
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-            display: none; background: rgba(255, 255, 255, 0.95); border: 6px gold double; 
-            padding: 40px; border-radius: 30px; text-align: center; color: #be0000; 
-            backdrop-filter: blur(10px); z-index: 1000; width: 85%; max-width: 500px;
+            display: none; background: rgba(255, 255, 255, 0.9); border: 8px double #be0000; 
+            padding: 40px; border-radius: 20px; text-align: center; color: #630000; 
+            z-index: 1000; width: 85%; max-width: 450px; box-shadow: 0 0 50px rgba(255,0,0,0.3);
         }
+
+        .big-heart { font-size: 80px; animation: pulse 1s infinite; cursor: pointer; display: block; margin: 10px auto; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
 
-    <audio id="bgMusic" loop>
-        <source src="mylovee.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="bgMusic" loop><source src="mylovee.mp3" type="audio/mpeg"></audio>
 
     <div class="video-container">
-        <video id="bgVideo" autoplay muted loop>
-            <source id="videoSource" src="video1.mp4" type="video/mp4">
-        </video>
+        <video id="bgVideo" autoplay muted loop><source id="videoSource" src="video1.mp4" type="video/mp4"></video>
     </div>
-
     <div class="overlay"></div>
 
-    <div id="page1" class="page active" style="background: #be0000; z-index: 1000;">
-        <h1 style="font-size: 3rem; letter-spacing: 2px;" onclick="init()">🔴 TAP TO START</h1>
-        <p>Turn up the volume...</p>
+    <div id="page1" class="page active" style="background: #630000; z-index: 1000;">
+        <h1 onclick="init()">🔴 TAP TO START</h1>
     </div>
 
     <div id="page2" class="page">
-        <h1>To My Gaggo ❤️</h1>
-        <div class="msg-content">
-            "This is where it all started. Every second with you is a blessing. First of all, I love you so much! 💋 I know I can be a bit difficult sometimes, but I still love you more than anything. I hope you remember how we first started talking—that 'early days' kind of love. I remember trying so hard to convince you to be with me while you were being your stubborn and picky self, but you were still so wonderful. I remember talking to you until we fell asleep and telling you I love you, because I truly got addicted to how cute you are. Those early phone calls and video chats are memories I'll always cherish, and I know we'll keep making more. Today's Date: February 11, 2026. We are actually in the middle of a fight right now, so I wanted to remind you of all this.It's funny—it's 11:53 PM, and I'm writing this while looking at you right now on video call."
-        </div>
-        <button class="btn" onclick="showPage(3, 'video2.mp4')">Continue ➔</button>
+        <h1>To My Gaggo... ❤️</h1>
+        <div class="msg-box" id="box1"><div id="text1" class="typewriter-text"></div></div>
+        <button class="btn" id="btn1" onclick="showPage(3, 'video2.mp4')">The Memories ➔</button>
     </div>
 
     <div id="page3" class="page">
-        <h1>Beautiful Memories ✨</h1>
-        <div class="msg-content">
-            "All the memories I’ve spent with you are truly beautiful, but even today, there are certain moments that fill my heart with happiness whenever I think about them. Like the time when you used to come to learn scooty riding with your brother, and I would come just to see you. Or the moment I saw you for the first time after we got into a relationship—coming back home and talking about how it felt to see you, how happy and special it made me feel. Then came the day we finally met for the first time. That first wave, that moment—we shared our first kiss, and it was unforgettable. The love in that moment was different, pure, and deeply emotional, a feeling that words can hardly describe. Meeting you at the Dilwali Mela was another one of our best moments. We spent the most time together that day and created memories that will always stay close to my heart. Thank you for coming into my life, for becoming so special to me, and for making me feel emotions I never knew before. I love you so much, my love. ❤️"
-        </div>
-        <button class="btn" onclick="showPage(4, 'video3.mp4')">Continue ➔</button>
+        <h1>Old Days ✨</h1>
+        <div class="msg-box" id="box2"><div id="text2" class="typewriter-text"></div></div>
+        <button class="btn" id="btn2" onclick="showPage(4, 'video3.mp4')">My Heart ➔</button>
     </div>
 
     <div id="page4" class="page">
-        <h1>I'm Sorry & Happy Anniversary 🫂</h1>
-        <div class="msg-content">
-            "Lastly, I want to say sorry for any time I may have misbehaved with you. I’m trying to control myself, but sometimes because I care too much, I become over-protective, and my anger comes out quickly. I end up saying more than I should or sounding harsh—and for that, I’m truly sorry. If possible, please forgive me. And if there’s any mistake in these words, forgive your baby as well. I’m not very good at expressing all this, but I honestly tried—just to make you feel a little special and loved. Thank you once again for coming into my life. Happy very first anniversary, my love. 🫂💗"
-        </div>
-        <button class="btn" onclick="startTheGame()">Let's Play a Game 🎮</button>
+        <h1>Forever & Always 🫂</h1>
+        <div class="msg-box" id="box3"><div id="text3" class="typewriter-text"></div></div>
+        <button class="btn" id="btn3" onclick="startTheGame()">Play Our Game 🎮</button>
     </div>
 
-    <div id="score-board">Hearts for Gaggo: <span id="score">0</span>/10</div>
+    <div id="score-board">Hearts Caught: <span id="score">0</span> / 10</div>
     <canvas id="gameCanvas"></canvas>
     <div id="bucket">🧺</div>
 
     <div id="final-coupon">
-        <h1>💖 Anniversary Surprise 💖</h1>
-        <p>You caught all my love!</p>
-        <p>Here is your forever coupon:</p>
-        <h2 style="letter-spacing: 5px; color: #ff4d4d;">GAGGO-LOVE-2026</h2>
+        <span class="big-heart">❤️</span>
+<h2 style="margin: 0;">Tumne Win Kiya Hai!</h2>
+        <p style="font-size: 1.2rem; line-height: 1.5;">Jatin ke sath forever stay,<br>hugs and kisses.</p>
+        <button class="btn" style="display:inline-block; margin-top:10px; background: #630000;" onclick="alert('Claimed! Forever Yours ❤️')">TAP TO CLAIM</button>
     </div>
 
     <script>
+        const messages = [
+            "To My Gaggo. This is where it all started. Every second with you is a blessing. First of all, I love you so much! 💋 I know I can be a bit difficult sometimes, but I still love you more than anything. I hope you remember how we first started talking-that 'early days' kind of love. I remember trying so hard to convince you to be with me while you were being your stubborn and picky self, but you were still so wonderful. I remember talking to you until we fell asleep and telling you I love you, because I truly got addicted to how cute you are. Those early phone calls and video chats are memories I'll always cherish, and I know we'll keep making more. Today's Date: February 11, 2026. We are actually in the middle of a fight right now, so I wanted to remind you of all this. It's funny-it's 11:53 PM, and I'm writing this while looking at you right now on video call.",
+            "All the memories I’ve spent with you are truly beautiful, but even today, there are certain moments that fill my heart with happiness whenever I think about them. Like the time when you used to come to learn scooty riding with your brother, and I would come just to see you. Or the moment I saw you for the first time after we got into a relationship—coming back home and talking about how it felt to see you, how happy and special it made me feel. Then came the day we finally met for the first time. That first wave, that moment—we shared our first kiss, and it was unforgettable. Meeting you at the Dilwali Mela was another one of our best moments. Thank you for coming into my life, for becoming so special to me. I love you so much, my love. ❤️",
+            "Lastly, I want to say sorry for any time I may have misbehaved with you. I’m trying to control myself, but sometimes because I care too much, I become over-protective, and my anger comes out quickly. I end up saying more than I should or sounding harsh—and for that, I’m truly sorry. If possible, please forgive me. And if there’s any mistake in these words, forgive your baby as well. I’m not very good at expressing all this, but I honestly tried—just to make you feel a little special and loved. Thank you once again for coming into my life. Happy very first anniversary, my love. 🫂💗"
+        ];
+
         const bgMusic = document.getElementById('bgMusic');
         const bgVideo = document.getElementById('bgVideo');
         const videoSource = document.getElementById('videoSource');
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        let score = 0;
-        let hearts = [];
-        let gameActive = false;
+        let score = 0, hearts = [], gameActive = false;
 
-        function init() {
-            bgMusic.play();
-            showPage(2);
-        }
+        function init() { bgMusic.play(); showPage(2); }
 
-        function showPage(num, nextVideo) {
+        function showPage(num, nextVid) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById('page' + num).classList.add('active');
-            
-            if(nextVideo) {
-                bgVideo.pause();
-                videoSource.src = nextVideo;
-                bgVideo.load();
-                bgVideo.play();
-            }
+            if(nextVid) { videoSource.src = nextVid; bgVideo.load(); bgVideo.play(); }
+            if(num >= 2 && num <= 4) typeWriter(messages[num-2], "text" + (num-1), "box" + (num-1), "btn" + (num-1));
+        }
+
+        function typeWriter(text, targetId, boxId, btnId) {
+            let i = 0;
+            const target = document.getElementById(targetId);
+            const box = document.getElementById(boxId);
+            const btn = document.getElementById(btnId);
+            target.innerHTML = ""; btn.style.display = "none";
+            function type() {
+                if (i < text.length) {
+                    target.innerHTML += text.charAt(i); i++;
+                    box.scrollTop = box.scrollHeight;
+                    setTimeout(type, 35);
+                } else { btn.style.display = "inline-block"; }
+}
+            type();
         }
 
         function startTheGame() {
@@ -139,47 +123,26 @@
             canvas.style.display = 'block';
             document.getElementById('score-board').style.display = 'block';
             document.getElementById('bucket').style.display = 'flex';
-            
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            gameActive = true;
-            
-            setInterval(createHeart, 800);
-animate();
-        }
-
-        function createHeart() {
-            if(!gameActive) return;
-            hearts.push({
-                x: Math.random() * (canvas.width - 60) + 30,
-                y: -50,
-                speed: 3 + Math.random() * 2,
-                size: 35 + Math.random() * 15
-            });
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            gameActive = true; 
+            setInterval(() => { if(gameActive) hearts.push({ x: Math.random()*(canvas.width-60)+30, y: -50, speed: 2.5 + Math.random()*2, size: 30 + Math.random()*20 }); }, 900);
+            animate();
         }
 
         function animate() {
             if(!gameActive) return;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            hearts.forEach((h, i) => {
-                h.y += h.speed;
-                ctx.font = h.size + "px serif";
-                ctx.fillText("❤️", h.x, h.y);
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            hearts.forEach((h,i) => {
+                h.y += h.speed; ctx.font = h.size + "px serif"; ctx.fillText("❤️", h.x, h.y);
                 if(h.y > canvas.height) hearts.splice(i, 1);
             });
-
-            if(score < 10) requestAnimationFrame(animate);
-            else endGame();
+            if(score < 10) requestAnimationFrame(animate); else endGame();
         }
 
         canvas.onclick = (e) => {
-            hearts.forEach((h, i) => {
-                let dist = Math.sqrt((e.clientX - h.x)**2 + (e.clientY - (h.y - 20))**2);
-                if(dist < 70) {
-                    hearts.splice(i, 1);
-                    score++;
-                    document.getElementById('score').innerText = score;
-                }
+            hearts.forEach((h,i) => {
+                let dist = Math.sqrt((e.clientX - h.x)**2 + (e.clientY - h.y)**2);
+                if(dist < 75) { hearts.splice(i,1); score++; document.getElementById('score').innerText = score; }
             });
         };
 
@@ -188,22 +151,14 @@ animate();
             canvas.style.display = 'none';
             document.getElementById('score-board').style.display = 'none';
             document.getElementById('bucket').style.display = 'none';
+            // Play video1.mp4 again
+            videoSource.src = 'video1.mp4';
+            bgVideo.load(); bgVideo.play();
             document.getElementById('final-coupon').style.display = 'block';
         }
 
-        document.addEventListener('mousemove', (e) => {
-            const bucket = document.getElementById('bucket');
-            if(bucket.style.display === 'flex') {
-                bucket.style.left = e.clientX + 'px';
-            }
-        });
-
-        document.addEventListener('touchmove', (e) => {
-            const bucket = document.getElementById('bucket');
-            if(bucket.style.display === 'flex') {
-                bucket.style.left = e.touches[0].clientX + 'px';
-            }
-        }, {passive: true});
+        document.addEventListener('mousemove', (e) => { if(document.getElementById('bucket').style.display === 'flex') document.getElementById('bucket').style.left = e.clientX + 'px'; });
+        document.addEventListener('touchmove', (e) => { if(document.getElementById('bucket').style.display === 'flex') document.getElementById('bucket').style.left = e.touches[0].clientX + 'px'; }, {passive: true});
     </script>
 </body>
 </html>
