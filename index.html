@@ -13,7 +13,6 @@
         
         .bg-video { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; z-index: -1; transform: translate(-50%, -50%); object-fit: cover; filter: brightness(45%); }
         
-        /* Glassmorphism Blur Box */
         .content { 
             position: relative; z-index: 20; 
             background: rgba(255, 255, 255, 0.1); 
@@ -24,15 +23,11 @@
         }
 
         .scroll-area { overflow-y: auto; margin-bottom: 10px; text-align: left; padding-right: 5px; }
-        .scroll-area::-webkit-scrollbar { width: 3px; }
-        .scroll-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); }
-
         h1 { font-family: 'Brush Script MT', cursive; font-size: 2.2rem; margin-bottom: 15px; color: #ff4d4d; }
         .type-txt { font-size: 1rem; line-height: 1.6; font-weight: 500; color: #fff; }
         
-        .btn { background: #ff4d4d; color: #fff; border: none; padding: 12px 25px; font-weight: bold; cursor: pointer; border-radius: 50px; margin-top: 15px; transition: 0.3s; align-self: center; text-decoration: none; display: inline-block; }
+        .btn { background: #ff4d4d; color: #fff; border: none; padding: 12px 25px; font-weight: bold; cursor: pointer; border-radius: 50px; margin-top: 15px; transition: 0.3s; align-self: center; text-decoration: none; }
 
-        /* Heart Rain */
         .heart-rain { position: absolute; color: #ff3333; font-size: 20px; top: -50px; animation: fall linear forwards; z-index: 5; pointer-events: none; }
         @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
 
@@ -41,11 +36,14 @@
         #no-btn { position: absolute; left: 55%; transition: 0.1s; }
         #yes-btn { position: absolute; left: 10%; }
         
-        /* Archery Game UI */
         #game-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 100; display: none; }
-        #game-ui { position: fixed; top: 30px; width: 100%; text-align: center; color: white; font-size: 22px; z-index: 101; display: none; font-weight: bold; text-shadow: 0 0 10px red; }
+        #game-ui { position: fixed; top: 30px; width: 100%; text-align: center; color: white; font-size: 22px; z-index: 101; display: none; font-weight: bold; }
         
-        .coupon { background: #fff; border: 5px gold double; padding: 30px; border-radius: 20px; text-align: center; color: #8b0000; display: none; z-index: 110; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 400px; }
+        .coupon { background: #fff; border: 5px gold double; padding: 30px; border-radius: 20px; text-align: center; color: #8b0000; display: none; z-index: 110; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 400px; box-shadow: 0 0 30px gold; }
+
+        /* Confession Video Style */
+        #confession-page { background: #000; z-index: 200; display: none; }
+        #finalVideo { width: 100%; height: 100%; object-fit: contain; }
     </style>
 </head>
 <body>
@@ -72,7 +70,7 @@
     <div class="part" id="p2">
         <video class="bg-video" id="v2" loop muted playsinline><source src="video2.mp4" type="video/mp4"></video>
         <div class="content">
-            <h1>Beautiful Memories ✨</h1>
+            <h1>Memories ✨</h1>
             <div class="scroll-area"><p class="type-txt" id="m2"></p></div>
             <button class="btn" id="b2" style="display:none" onclick="nxt('p3', 'v3', 'm3')">Last Page 🎁</button>
         </div>
@@ -93,13 +91,18 @@
         </div>
     </div>
 
-    <div id="game-ui">🏹 Score: <span id="score">0</span>/3<br><small style="font-size: 12px;">Drag to Aim & Release!</small></div>
+    <div id="game-ui">🏹 Score: <span id="score">0</span>/3<br><small>Drag Bow to Aim!</small></div>
     <canvas id="game-canvas"></canvas>
 
     <div class="coupon" id="final-coupon">
-        <h1 style="color: gold; -webkit-text-stroke: 1px #8b0000;">🎟️ COUPON</h1>
-        <p style="margin: 15px 0; font-weight: bold;">Congratulations! You won a special date with Jatin.</p>
-        <p><strong>1 Full Day of Unlimited Hugs & Your Fav Food!</strong></p>
+        <h1>🎟️ COUPON</h1>
+        <p style="margin: 15px 0;">You won a special date with Jatin!</p>
+        <p><strong>Unlimited Hugs & Your Fav Food!</strong></p>
+        <button class="btn" onclick="openConfession()" style="background: #8b0000; margin-top: 20px;">Open My Confession... 🤫</button>
+    </div>
+
+    <div class="part" id="confession-page">
+        <video id="finalVideo" playsinline><source src="confession.mp4" type="video/mp4"></video>
     </div>
 
     <script>
@@ -117,7 +120,6 @@
         setInterval(createHeart, 300);
 
         function go() { document.getElementById("myMusic").play(); nxt('p1', 'v1', 'm1'); }
-
         function nxt(pId, vId, mId) {
             document.querySelectorAll('.part').forEach(p => p.classList.remove('active'));
             document.getElementById(pId).classList.add('active');
@@ -127,11 +129,10 @@
 
         function type(id, text, pId) {
             let i = 0; let el = document.getElementById(id); el.innerHTML = "";
-            let scrollArea = el.parentElement;
             function t() { 
                 if(i < text.length){ 
                     el.innerHTML += text.charAt(i); i++; 
-                    scrollArea.scrollTop = scrollArea.scrollHeight;
+                    el.parentElement.scrollTop = el.parentElement.scrollHeight;
                     setTimeout(t, 35); 
                 } else {
                     if(pId === 'p1') document.getElementById('b1').style.display='inline-block';
@@ -146,7 +147,6 @@
             b.style.left = Math.random()*70+'%'; b.style.top = Math.random()*70+'%';
         }
 
-        /* FIXED ARCHERY GAME WITH MOVING BOW */
         function startArchery() {
             document.getElementById('p3').style.display='none';
             document.getElementById('game-canvas').style.display='block';
@@ -154,44 +154,27 @@
             const canvas = document.getElementById('game-canvas');
             const ctx = canvas.getContext('2d');
             canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-
-            let score = 0, arrows = [], targets = [], isDrawing = false;
-            let bowX = 40, bowY = canvas.height / 2;
-
-            function spawn() { targets.push({ x: canvas.width - 60, y: Math.random()*(canvas.height-100)+50, r: 25 }); }
-            let sInt = setInterval(spawn, 1500);
-
-            // Bow follows finger/mouse
-            const updateBow = (e) => {
-                let y = e.touches ? e.touches[0].clientY : e.clientY;
-                bowY = y;
-            };
-            canvas.addEventListener('mousemove', updateBow);
-            canvas.addEventListener('touchmove', (e) => { e.preventDefault(); updateBow(e); }, {passive: false});
-
-            canvas.onmousedown = canvas.ontouchstart = (e) => { isDrawing = true; updateBow(e); };
+            let score = 0, arrows = [], targets = [], bowX = 40, bowY = canvas.height/2, isDrawing = false;
+            
+            const move = (e) => { bowY = (e.touches ? e.touches[0].clientY : e.clientY); };
+            canvas.addEventListener('mousemove', move);
+            canvas.addEventListener('touchmove', (e) => { e.preventDefault(); move(e); }, {passive: false});
+            canvas.onmousedown = canvas.ontouchstart = (e) => { isDrawing = true; move(e); };
             canvas.onmouseup = canvas.ontouchend = () => { if(isDrawing) { arrows.push({x: bowX, y: bowY}); isDrawing = false; } };
+
+            let sInt = setInterval(() => targets.push({x: canvas.width-60, y: Math.random()*(canvas.height-100)+50, r: 25}), 1500);
 
             function loop() {
                 ctx.clearRect(0,0,canvas.width, canvas.height);
-                // Draw Moving Bow
                 ctx.strokeStyle = "white"; ctx.lineWidth = 4;
                 ctx.beginPath(); ctx.arc(bowX, bowY, 45, -Math.PI/2, Math.PI/2); ctx.stroke();
                 ctx.beginPath(); ctx.moveTo(bowX, bowY-45); ctx.lineTo(bowX, bowY+45); ctx.stroke();
-                
-                // Draw Arrows
                 arrows.forEach((a, ai) => {
                     a.x += 15; ctx.fillStyle = "white"; ctx.fillRect(a.x, a.y-1, 30, 3);
                     targets.forEach((t, ti) => {
-                        if(Math.hypot(a.x - t.x, a.y - t.y) < t.r + 10) {
-                            arrows.splice(ai, 1); targets.splice(ti, 1);
-                            score++; document.getElementById('score').innerText = score;
-                            if(score >= 3) { win(); score = -99; clearInterval(sInt); }
-                        }
+                        if(Math.hypot(a.x - t.x, a.y - t.y) < t.r + 10) { arrows.splice(ai,1); targets.splice(ti,1); score++; document.getElementById('score').innerText = score; if(score>=3){ clearInterval(sInt); win(); score=-99; } }
                     });
-                    if(a.x > canvas.width) arrows.splice(ai, 1);
                 });
-                // Draw Targets
                 targets.forEach(t => { ctx.font = "40px serif"; ctx.fillText("❤️", t.x, t.y+15); });
                 if(score < 3) requestAnimationFrame(loop);
             }
@@ -202,6 +185,16 @@
             document.getElementById('game-canvas').style.display='none';
             document.getElementById('game-ui').style.display='none';
             document.getElementById('final-coupon').style.display='block';
+        }
+
+        function openConfession() {
+            document.getElementById('final-coupon').style.display = 'none';
+            document.getElementById('myMusic').pause(); // Background music stop
+            document.getElementById('confession-page').style.display = 'flex';
+            document.getElementById('confession-page').classList.add('active');
+            const v = document.getElementById('finalVideo');
+            v.volume = 1.0;
+            v.play();
         }
     </script>
 </body>
