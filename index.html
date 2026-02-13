@@ -3,57 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Anniversary ❤️</title>
+    <title>For My Gaggo ❤️</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 100vw; font-family: 'Courier New', Courier, monospace; }
+        body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 100vw; font-family: 'serif'; }
         
         .part { height: 100vh; width: 100vw; position: absolute; top: 0; left: 0; display: flex; justify-content: center; align-items: center; visibility: hidden; opacity: 0; transition: opacity 0.8s; }
         .active { visibility: visible; opacity: 1; z-index: 10; }
         
-        .bg-video { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; z-index: -1; transform: translate(-50%, -50%); object-fit: cover; filter: brightness(50%); }
+        .bg-video { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; z-index: -1; transform: translate(-50%, -50%); object-fit: cover; filter: brightness(45%); }
         
-        /* Blur Content Style */
+        /* Glassmorphism Blur Box */
         .content { 
             position: relative; z-index: 20; 
             background: rgba(255, 255, 255, 0.1); 
             backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             padding: 25px; border: 1px solid rgba(255, 255, 255, 0.2); 
             border-radius: 20px; text-align: center; 
-            max-width: 500px; width: 90%; max-height: 85vh; display: flex; flex-direction: column; 
+            max-width: 350px; width: 90%; max-height: 80vh; display: flex; flex-direction: column; 
         }
 
-        .scroll-area { overflow-y: auto; margin-bottom: 10px; text-align: left; }
-        h1 { font-family: 'Brush Script MT', cursive; font-size: 2.2rem; margin-bottom: 12px; color: #ff4b2b; }
-        .type-txt { font-size: 1rem; line-height: 1.5; font-weight: bold; color: #fff; }
+        .scroll-area { overflow-y: auto; margin-bottom: 10px; text-align: left; padding-right: 5px; }
+        .scroll-area::-webkit-scrollbar { width: 3px; }
+        .scroll-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); }
+
+        h1 { font-family: 'Brush Script MT', cursive; font-size: 2.2rem; margin-bottom: 15px; color: #ff4d4d; }
+        .type-txt { font-size: 1rem; line-height: 1.6; font-weight: 500; color: #fff; }
         
-        .btn { background: #ff4b2b; color: #fff; border: none; padding: 12px 25px; font-weight: bold; cursor: pointer; border-radius: 50px; margin-top: 10px; transition: 0.3s; align-self: center; }
+        .btn { background: #ff4d4d; color: #fff; border: none; padding: 12px 25px; font-weight: bold; cursor: pointer; border-radius: 50px; margin-top: 15px; transition: 0.3s; align-self: center; text-decoration: none; display: inline-block; }
 
         /* Heart Rain */
-        .heart-rain { position: absolute; color: red; font-size: 20px; top: -50px; animation: fall linear forwards; z-index: 5; pointer-events: none; }
+        .heart-rain { position: absolute; color: #ff3333; font-size: 20px; top: -50px; animation: fall linear forwards; z-index: 5; pointer-events: none; }
         @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
 
-        #val-box { background: rgba(255, 240, 240, 0.9); border: 2px dashed #ff4b2b; padding: 15px; margin-top: 15px; border-radius: 15px; color: #333; display: none; }
-        .val-btns { position: relative; height: 60px; margin-top: 10px; }
-        #no-btn { position: absolute; transition: 0.1s; left: 55%; }
+        #val-box { background: rgba(255, 255, 255, 0.15); padding: 15px; margin-top: 15px; border-radius: 15px; display: none; border: 1px dashed #ff4d4d; }
+        .val-btns { position: relative; height: 60px; margin-top: 15px; }
+        #no-btn { position: absolute; left: 55%; transition: 0.1s; }
         #yes-btn { position: absolute; left: 10%; }
         
-        /* Game Styles */
+        /* Archery Game */
         #game-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 100; display: none; }
-        #game-ui { position: fixed; top: 20px; width: 100%; text-align: center; color: white; font-size: 20px; z-index: 101; display: none; }
+        #game-ui { position: fixed; top: 30px; width: 100%; text-align: center; color: white; font-size: 22px; z-index: 101; display: none; font-weight: bold; }
         
-        .coupon { background: #fff; border: 5px gold double; padding: 30px; border-radius: 20px; text-align: center; color: #8b0000; display: none; z-index: 110; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 400px; }
+        .coupon { background: #fff; border: 5px gold double; padding: 30px; border-radius: 20px; text-align: center; color: #8b0000; display: none; z-index: 110; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 400px; box-shadow: 0 0 30px rgba(255,215,0,0.4); }
     </style>
 </head>
 <body>
 
     <audio id="myMusic" loop><source src="mylovee.mp3" type="audio/mpeg"></audio>
 
-    <div class="part active" id="start-screen" style="background: #1a0000;">
+    <div class="part active" id="start-screen" style="background: radial-gradient(circle, #300, #000);">
         <div class="content">
             <h1>Our Love Story ❤️</h1>
-            <p class="type-txt">Click to enter the journey I made for you.</p>
-            <button class="btn" onclick="go()">Start ✨</button>
+            <p class="type-txt" style="text-align: center;">Click to enter the special world I made for you, Gaggo.</p>
+            <button class="btn" onclick="go()">Start Journey ✨</button>
         </div>
     </div>
 
@@ -62,16 +65,16 @@
         <div class="content">
             <h1>Our Beginning ❤️</h1>
             <div class="scroll-area"><p class="type-txt" id="m1"></p></div>
-            <button class="btn" onclick="nxt('p2', 'v2', 'm2')">Next 👉</button>
+            <button class="btn" id="b1" style="display:none" onclick="nxt('p2', 'v2', 'm2')">Next Memory 👉</button>
         </div>
     </div>
 
     <div class="part" id="p2">
         <video class="bg-video" id="v2" loop muted playsinline><source src="video2.mp4" type="video/mp4"></video>
         <div class="content">
-            <h1>Memories ✨</h1>
+            <h1>Beautiful Memories ✨</h1>
             <div class="scroll-area"><p class="type-txt" id="m2"></p></div>
-            <button class="btn" onclick="nxt('p3', 'v3', 'm3')">Last Page 🎁</button>
+            <button class="btn" id="b2" style="display:none" onclick="nxt('p3', 'v3', 'm3')">Last Page 🎁</button>
         </div>
     </div>
 
@@ -81,29 +84,31 @@
             <h1>Forever Yours 💍</h1>
             <div class="scroll-area"><p class="type-txt" id="m3"></p></div>
             <div id="val-box">
-                <p style="font-weight: bold;">Will you be my Valentine?</p>
+                <p style="font-weight: bold; color: #ff4d4d;">Will you be my Valentine?</p>
                 <div class="val-btns">
                     <button id="yes-btn" class="btn" onclick="startArchery()">YES! 🏹</button>
-                    <button id="no-btn" class="btn" style="background:#555" onmouseover="moveNo()">NO</button>
+                    <button id="no-btn" class="btn" style="background:#444" onmouseover="moveNo()">NO</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="game-ui">❤️ Hearts Hit: <span id="score">0</span>/3<br><small>Tap & Release to Shoot!</small></div>
+    <div id="game-ui">🏹 Score: <span id="score">0</span>/3<br><small style="font-size: 12px; opacity: 0.8;">Tap & Release to Shoot!</small></div>
     <canvas id="game-canvas"></canvas>
 
     <div class="coupon" id="final-coupon">
-        <h1>🎟️ DATE COUPON</h1>
-        <p style="margin: 15px 0;">You've won a special date with Jatin!</p>
-        <p><strong>1 Full Day of Unlimited Hugs & Your Fav Food!</strong></p>
+        <h1 style="color: gold; -webkit-text-stroke: 1px #8b0000;">🎟️ COUPON</h1>
+        <p style="margin: 15px 0; font-size: 1.1rem; font-weight: bold;">Congratulations! You won a special date with Jatin.</p>
+        <hr>
+        <p style="margin-top: 10px;"><strong>1 Full Day of Unlimited Hugs & Your Fav Food!</strong></p>
+        <p style="font-size: 0.8rem; margin-top: 10px; color: #555;">Valid Forever ❤️</p>
     </div>
 
     <script>
         const msgList = {
-            m1: "To My Gaggo. This is where it all started... (Aapka Msg 1)",
-            m2: "All the memories I’ve spent with you... (Aapka Msg 2)",
-            m3: "Lastly, I want to say sorry... (Aapka Msg 3). Happy Anniversary! 🫂💗"
+            m1: "To My Gaggo. This is where it all started. Every second with you is a blessing. First of all, I love you so much! 💋 I know I can be a bit difficult sometimes, but I still love you more than anything. I hope you remember how we first started talking-that 'early days' kind of love. I remember trying so hard to convince you to be with me while you were being your stubborn and picky self, but you were still so wonderful. I remember talking to you until we fell asleep and telling you I love you, because I truly got addicted to how cute you are. Those early phone calls and video chats are memories I'll always cherish, and I know we'll keep making more. Today's Date: February 11, 2026. We are actually in the middle of a fight right now, so I wanted to remind you of all this. It's funny-it's 11:53 PM, and I'm writing this while looking at you right now on video call.",
+            m2: "All the memories I’ve spent with you are truly beautiful, but even today, there are certain moments that fill my heart with happiness whenever I think about them. Like the time when you used to come to learn scooty riding with your brother, and I would come just to see you. Or the moment I saw you for the first time after we got into a relationship—coming back home and talking about how it felt to see you, how happy and special it made me feel. Then came the day we finally met for the first time. That first wave, that moment—we shared our first kiss, and it was unforgettable. The love in that moment was different, pure, and deeply emotional, a feeling that words can hardly describe. Meeting you at the Dilwali Mela was another one of our best moments. We spent the most time together that day and created memories that will always stay close to my heart. Thank you for coming into my life, for becoming so special to me, and for making me feel emotions I never knew before. I love you so much, my love. ❤️",
+            m3: "Lastly, I want to say sorry for any time I may have misbehaved with you. I’m trying to control myself, but sometimes because I care too much, I become over-protective, and my anger comes out quickly. I end up saying more than I should or sounding harsh—and for that, I’m truly sorry. If possible, please forgive me. And if there’s any mistake in these words, forgive your baby as well. I’m not very good at expressing all this, but I honestly tried—just to make you feel a little special and loved. Thank you once again for coming into my life. Happy very first anniversary, my love. 🫂💗"
         };
 
         function createHeart() {
@@ -113,17 +118,32 @@
         }
         setInterval(createHeart, 300);
 
-        function go() { document.getElementById("myMusic").play(); nxt('p1', 'v1', 'm1'); }
+        function go() { 
+            document.getElementById("myMusic").play(); 
+            nxt('p1', 'v1', 'm1'); 
+        }
+
         function nxt(pId, vId, mId) {
             document.querySelectorAll('.part').forEach(p => p.classList.remove('active'));
             document.getElementById(pId).classList.add('active');
             let v = document.getElementById(vId); if(v) v.play();
-            if(mId) type(mId, msgList[mId], mId === 'm3' ? () => document.getElementById('val-box').style.display='block' : null);
+            if(mId) type(mId, msgList[mId], pId);
         }
 
-        function type(id, text, cb) {
+        function type(id, text, pId) {
             let i = 0; let el = document.getElementById(id); el.innerHTML = "";
-            function t() { if(i<text.length){ el.innerHTML += text.charAt(i); i++; setTimeout(t, 40); } else if(cb) cb(); } t();
+            let scrollArea = el.parentElement;
+            function t() { 
+                if(i < text.length){ 
+                    el.innerHTML += text.charAt(i); i++; 
+                    scrollArea.scrollTop = scrollArea.scrollHeight;
+                    setTimeout(t, 35); 
+                } else {
+                    if(pId === 'p1') document.getElementById('b1').style.display='inline-block';
+                    if(pId === 'p2') document.getElementById('b2').style.display='inline-block';
+                    if(pId === 'p3') document.getElementById('val-box').style.display='block';
+                } 
+            } t();
         }
 
         function moveNo() {
@@ -131,8 +151,7 @@
             b.style.left = Math.random()*70+'%'; b.style.top = Math.random()*70+'%';
         }
 
-        /* Archery Game Logic */
-        let score = 0;
+        /* Archery Game */
         function startArchery() {
             document.getElementById('p3').style.display='none';
             document.getElementById('game-canvas').style.display='block';
@@ -141,49 +160,36 @@
             const ctx = canvas.getContext('2d');
             canvas.width = window.innerWidth; canvas.height = window.innerHeight;
 
-            let bowX = 50, bowY = canvas.height/2;
-            let arrows = [], targets = [];
-            let isDrawing = false;
+            let score = 0, arrows = [], targets = [], isDrawing = false;
+            let bowX = 40, bowY = canvas.height/2;
 
-            function spawnTarget() { 
-                targets.push({ x: canvas.width - 80, y: Math.random()*(canvas.height-100)+50, r: 30 }); 
-            }
-            setInterval(spawnTarget, 2000);
+            function spawnTarget() { targets.push({ x: canvas.width - 60, y: Math.random()*(canvas.height-100)+50, r: 25 }); }
+            setInterval(spawnTarget, 1500);
 
             canvas.onmousedown = canvas.ontouchstart = () => isDrawing = true;
-            canvas.onmouseup = canvas.ontouchend = (e) => {
-                if(isDrawing) {
-                    arrows.push({ x: bowX, y: bowY, speed: 10 });
-                    isDrawing = false;
-                }
+            canvas.onmouseup = canvas.ontouchend = () => {
+                if(isDrawing) { arrows.push({ x: bowX, y: bowY }); isDrawing = false; }
             };
 
-            function draw() {
+            function gameLoop() {
                 ctx.clearRect(0,0,canvas.width, canvas.height);
-                // Draw Bow
                 ctx.strokeStyle = "white"; ctx.lineWidth = 3;
                 ctx.beginPath(); ctx.arc(bowX, bowY, 40, -Math.PI/2, Math.PI/2); ctx.stroke();
                 
-                // Arrows
-                arrows.forEach((a, i) => {
-                    a.x += a.speed; ctx.fillStyle = "white"; ctx.fillRect(a.x, a.y, 20, 2);
+                arrows.forEach((a, ai) => {
+                    a.x += 12; ctx.fillStyle = "white"; ctx.fillRect(a.x, a.y, 25, 2);
                     targets.forEach((t, ti) => {
-                        let dist = Math.hypot(a.x - t.x, a.y - t.y);
-                        if(dist < t.r) {
-                            arrows.splice(i, 1); targets.splice(ti, 1);
+                        if(Math.hypot(a.x - t.x, a.y - t.y) < t.r + 10) {
+                            arrows.splice(ai, 1); targets.splice(ti, 1);
                             score++; document.getElementById('score').innerText = score;
-                            if(score >= 3) { setTimeout(win, 500); score = -99; }
+                            if(score >= 3) { win(); score = -99; }
                         }
                     });
-                    if(a.x > canvas.width) arrows.splice(i, 1);
                 });
-
-                // Targets (Hearts)
                 targets.forEach(t => { ctx.font = "40px serif"; ctx.fillText("❤️", t.x, t.y); });
-                
-                if(score < 3) requestAnimationFrame(draw);
+                if(score < 3) requestAnimationFrame(gameLoop);
             }
-            draw();
+            gameLoop();
         }
 
         function win() {
