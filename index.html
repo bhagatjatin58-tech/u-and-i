@@ -161,9 +161,15 @@
             canvas.onclick = (e) => { hearts.forEach((h, idx) => { if(Math.abs(e.clientX-h.x)<40 && Math.abs(e.clientY-h.y)<40){ hearts.splice(idx,1); score++; document.getElementById('score').innerText = score; if(score>=10) win(); } }); };
             setInterval(spawn, 800); draw();
         }
-        function win() {document.getElementById('bucket').style.display = 'none';
- document.getElementById('game-canvas').style.display='none'; document.getElementById('score-board').style.display='none'; document.getElementById('final-coupon').style.display='block'; }
-    document.addEventListener('mousemove', (e) => {
+       function win() {
+    document.getElementById('bucket').style.display = 'none';
+    document.getElementById('game-canvas').style.display = 'none';
+    document.getElementById('score-board').style.display = 'none';
+    document.getElementById('final-coupon').style.display = 'block';
+}
+
+// Yeh win function ke baahar hona chahiye taaki hamesha kaam kare
+document.addEventListener('mousemove', (e) => {
     const bucket = document.getElementById('bucket');
     if(bucket.style.display === 'flex') {
         bucket.style.left = e.clientX + 'px';
@@ -177,9 +183,18 @@ document.addEventListener('touchmove', (e) => {
     }
 });
 
+
+document.addEventListener('touchmove', (e) => {
+    const bucket = document.getElementById('bucket');
+    if(bucket.style.display === 'flex') {
+        bucket.style.left = e.touches[0].clientX + 'px';
+    }
+});
+
     </script>
 </body>
 </html>
+
 
 
 
