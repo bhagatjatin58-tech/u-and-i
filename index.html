@@ -2,185 +2,222 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>For My Gaggo ❤️</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Anniversary ❤️</title>
     <style>
-        :root { --vintage-red: #8b0000; }
-        body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; font-family: 'Playfair Display', serif; background-color: #000; color: white; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #000; color: #4a2c2c; overflow: hidden; height: 100vh; width: 100vw; font-family: 'Courier New', Courier, monospace; }
         
-        .video-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
-        video { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1s; }
-        video.playing { opacity: 0.6; }
-
-        .page { display: none; height: 100vh; width: 100vw; position: relative; text-align: center; justify-content: center; align-items: center; flex-direction: column; z-index: 5; }
-        .active { display: flex; }
-
-        .blur-note { 
-            background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            padding: 20px; border-radius: 15px; width: 85%; max-width: 320px; height: 350px; 
-            overflow-y: auto; border: 1px solid rgba(255,255,255,0.2); text-align: left; 
-            font-size: 1rem; line-height: 1.6; margin-bottom: 20px; scroll-behavior: smooth;
+        .part { height: 100vh; width: 100vw; position: absolute; top: 0; left: 0; display: flex; justify-content: center; align-items: center; visibility: hidden; opacity: 0; transition: opacity 0.8s; }
+        .active { visibility: visible; opacity: 1; z-index: 10; }
+        
+        .bg-video { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; z-index: -1; transform: translate(-50%, -50%); object-fit: cover; filter: brightness(60%); }
+        
+        /* Blur Content Style */
+        .content { 
+            position: relative; z-index: 20; 
+            background: rgba(253, 245, 230, 0.15); /* Transparent Background */
+            backdrop-filter: blur(15px); /* Blur Effect */
+            -webkit-backdrop-filter: blur(15px);
+            padding: 25px; 
+            border: 2px solid rgba(255, 255, 255, 0.2); 
+            border-radius: 20px; 
+            text-align: center; 
+            max-width: 500px; width: 90%; 
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5); 
+            max-height: 85vh; display: flex; flex-direction: column; 
         }
 
-        .vintage-entry { font-family: 'Dancing Script', cursive; font-size: 3.5rem; color: #ff4d4d; cursor: pointer; text-shadow: 0 0 10px rgba(255,0,0,0.5); }
-        .next-btn { padding: 12px 30px; background: var(--vintage-red); color: white; border: none; border-radius: 50px; cursor: pointer; display: none; transition: 0.3s; }
+        .scroll-area { overflow-y: auto; margin-bottom: 10px; padding-right: 8px; text-align: left; }
+        .scroll-area::-webkit-scrollbar { width: 4px; }
+        .scroll-area::-webkit-scrollbar-thumb { background: #ff4b2b; }
+
+        h1 { font-family: 'Brush Script MT', cursive; font-size: 2.2rem; margin-bottom: 12px; color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        .type-txt { font-size: 1.05rem; line-height: 1.5; font-weight: bold; color: #ffffff; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
         
-        .heart { position: absolute; color: #ff3333; font-size: 20px; top: -30px; animation: fall linear infinite; z-index: 10; pointer-events: none; }
+        .btn { background: #8b0000; color: #fff; border: none; padding: 12px 20px; font-weight: bold; cursor: pointer; text-transform: uppercase; margin: 10px auto; font-size: 0.9rem; border-radius: 50px; transition: 0.3s; width: fit-content; }
+        .btn:hover { background: #ff4b2b; transform: scale(1.05); }
+
+        /* Heart Rain Animation */
+        .heart-rain { position: absolute; color: red; font-size: 20px; top: -50px; animation: fall linear forwards; z-index: 5; pointer-events: none; }
         @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+
+        #anni-wish { background: rgba(255, 255, 255, 0.9); border: 2px solid #8b0000; padding: 10px; margin: 10px 0; border-radius: 10px; display: none; color: #8b0000; font-weight: bold; font-size: 1.1rem; }
+        #val-box { background: rgba(255, 240, 240, 0.9); border: 2px dashed #ff4b2b; padding: 15px; margin-top: 5px; border-radius: 15px; display: none; color: #333; }
         
-        #no-btn { position: absolute; transition: 0.1s; }
-        canvas { background: rgba(255,255,255,0.1); border-radius: 10px; margin: 10px; }
+        .val-btns { position: relative; height: 60px; margin-top: 10px; }
+        #no-btn { position: absolute; transition: 0.2s; left: 55%; }
+        #yes-btn { position: absolute; left: 10%; }
+        
+        #game-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100; display: none; }
+        #score-board { position: fixed; top: 20px; width: 100%; text-align: center; color: white; font-size: 22px; z-index: 101; display: none; }
+        .coupon { background: #fff; border: 5px gold double; padding: 30px; border-radius: 20px; text-align: center; color: #8b0000; display: none; z-index: 110; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 400px; box-shadow: 0 0 50px rgba(255,215,0,0.5); }
     </style>
 </head>
 <body>
 
-    <audio id="bgMusic" loop preload="auto"><source src="mylovee.mp3" type="audio/mpeg"></audio>
+    <audio id="myMusic" loop><source src="mylovee.mp3" type="audio/mpeg"></audio>
 
-    <div id="page1" class="page active" style="background: #1a0000;" onclick="startExp()">
-        <div class="vintage-entry">For My Gaggo</div>
-        <p style="color: #ffcccc; margin-top: 20px;">Tap to enter her world ✨</p>
-    </div>
-
-    <div id="page2" class="page">
-        <div class="video-container"><video id="v1" loop playsinline muted><source src="video1.mp4" type="video/mp4"></video></div>
-        <div class="blur-note" id="type1"></div>
-        <button class="next-btn" id="btn1" onclick="goTo(3)">Next Memory ❤️</button>
-    </div>
-
-    <div id="page3" class="page">
-        <div class="video-container"><video id="v2" loop playsinline muted><source src="video2.mp4" type="video/mp4"></video></div>
-        <div class="blur-note" id="type2"></div>
-        <button class="next-btn" id="btn2" onclick="goTo(4)">Continue... 🫂</button>
-    </div>
-
-    <div id="page4" class="page">
-        <div class="video-container"><video id="v3" loop playsinline muted><source src="video3.mp4" type="video/mp4"></video></div>
-        <div class="blur-note" id="type3"></div>
-        <button class="next-btn" id="btn3" onclick="goTo(5)">I have a surprise! 🎁</button>
-    </div>
-
-    <div id="page5" class="page">
-        <div class="video-container"><video id="v4" loop playsinline muted><source src="video1.mp4" type="video/mp4"></video></div>
-        <h2 id="scoreTxt">Catch 10 Hearts! 0/10</h2>
-        <canvas id="game" width="300" height="350"></canvas>
-    </div>
-
-    <div id="page6" class="page">
-        <div class="video-container"><video id="v5" loop playsinline muted><source src="video2.mp4" type="video/mp4"></video></div>
-        <h1 style="font-family: 'Dancing Script';">Will you be my Valentine?</h1>
-<div style="margin-top: 50px;">
-            <button class="next-btn" onclick="goTo(7)" style="background: green; display: inline-block; margin-right: 15px;">YES</button>
-            <button class="next-btn" id="no-btn" onmouseover="moveNo()" ontouchstart="moveNo()" style="background: red; display: inline-block;">NO</button>
+    <div class="part active" id="start-screen" style="background: radial-gradient(circle, #4a0000, #000);">
+        <div class="content" style="background: rgba(255,255,255,0.1);">
+            <h1>Our Love Story ❤️</h1>
+            <p class="type-txt">I have made something very special for you Gaggo. Open this letter.</p>
+            <button class="btn" onclick="go()">Open Letter ✉️</button>
         </div>
     </div>
 
-    <div id="page7" class="page" style="background: #300;">
-        <div style="border: 3px dashed gold; padding: 25px; background: white; color: #8b0000; border-radius: 15px; width: 80%;">
-            <h2>🎟️ COUPON</h2>
-            <p>Congratulations! You won a special date with Jatin.</p>
-            <p><strong>1 Full Day of Unlimited Hugs & Your Fav Food</strong></p>
+    <div class="part" id="p1">
+        <video class="bg-video" id="v1" loop muted playsinline><source src="video1.mp4" type="video/mp4"></video>
+        <div class="content">
+            <h1>Our Beginning ❤️</h1>
+            <div class="scroll-area"><p class="type-txt" id="m1"></p></div>
+            <button class="btn" onclick="nxt('p2', 'v2', 'm2')">Turn Page 👉</button>
         </div>
+    </div>
+
+    <div class="part" id="p2">
+        <video class="bg-video" id="v2" loop muted playsinline><source src="video2.mp4" type="video/mp4"></video>
+        <div class="content">
+            <h1>Memories ✨</h1>
+            <div class="scroll-area"><p class="type-txt" id="m2"></p></div>
+            <button class="btn" onclick="nxt('p3', 'v3', 'm3')">Last Page 🎁</button>
+        </div>
+    </div>
+
+    <div class="part" id="p3">
+        <video class="bg-video" id="v3" loop muted playsinline><source src="video3.mp4" type="video/mp4"></video>
+        <div class="content">
+            <h1>Forever Yours 💍</h1>
+            <div class="scroll-area"><p class="type-txt" id="m3"></p></div>
+            <div id="anni-wish">Happy Very First Anniversary, My Love! 🫂💗</div>
+            <div id="val-box">
+                <p style="color:#ff4b2b; font-size: 0.9rem;">Happy Valentine! Mujhe pta hai mei late hu isliye abhi kr diya... ❤️</p>
+                <p style="margin-top:5px; font-weight: bold;">Will you be my Valentine?</p>
+                <div class="val-btns">
+                    <button id="yes-btn" class="btn" style="background:#ff4b2b" onclick="startGame()">YES! 💖</button>
+                    <button id="no-btn" class="btn" style="background:#555" onmouseover="moveNo()">NO 😢</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="score-board">Catch 10 Hearts: <span id="score">0</span>/10</div>
+    <canvas id="game-canvas"></canvas>
+
+    <div class="coupon" id="final-coupon">
+        <h2 style="font-family: 'Brush Script MT', cursive; font-size: 2.2rem;">Date Coupon 🎟️</h2>
+        <p style="margin: 10px 0;">Congratulations! You won a special date with Jatin.</p>
+        <p><strong>Offer:</strong> 1 Full Day of Unlimited Hugs & Your Fav Food!</p>
+        <button class="btn" onclick="location.reload()">Re-read Letter</button>
     </div>
 
     <script>
-        const msgs = [
-            "To My Gaggo. This is where it all started. Every second with you is a blessing. First of all, I love you so much! 💋 I know I can be a bit difficult sometimes, but I still love you more than anything. I hope you remember how we first started talking-that 'early days' kind of love. I remember trying so hard to convince you to be with me while you were being your stubborn and picky self, but you were still so wonderful. I remember talking to you until we fell asleep and telling you I love you, because I truly got addicted to how cute you are. Those early phone calls and video chats are memories I'll always cherish, and I know we'll keep making more. Today's Date: February 11, 2026. We are actually in the middle of a fight right now, so I wanted to remind you of all this. It's funny-it's 11:53 PM, and I'm writing this while looking at you right now on video call.",
-            "All the memories I’ve spent with you are truly beautiful, but even today, there are certain moments that fill my heart with happiness whenever I think about them. Like the time when you used to come to learn scooty riding with your brother, and I would come just to see you. Or the moment I saw you for the first time after we got into a relationship—coming back home and talking about how it felt to see you, how happy and special it made me feel. Then came the day we finally met for the first time. That first wave, that moment—we shared our first kiss, and it was unforgettable. The love in that moment was different, pure, and deeply emotional, a feeling that words can hardly describe. Meeting you at the Dilwali Mela was another one of our best moments. We spent the most time together that day and created memories that will always stay close to my heart. Thank you for coming into my life, for becoming so special to me, and for making me feel emotions I never knew before. I love you so much, my love. ❤️",
-            "Lastly, I want to say sorry for any time I may have misbehaved with you. I’m trying to control myself, but sometimes because I care too much, I become over-protective, and my anger comes out quickly. I end up saying more than I should or sounding harsh—and for that, I’m truly sorry. If possible, please forgive me. And if there’s any mistake in these words, forgive your baby as well. I’m not very good at expressing all this, but I honestly tried—just to make you feel a little special and loved. Thank you once again for coming into my life. Happy very first anniversary, my love. 🫂💗"
-        ];
+        const msgList = {
+            m1: "To My Gaggo. This is where it all started. Every second with you is a blessing. First of all, I love you so much! 💋 I know I can be a bit difficult sometimes, but I still love you more than anything. I hope you remember how we first started talking-that 'early days' kind of love. I remember trying so hard to convince you to be with me while you were being your stubborn and picky self, but you were still so wonderful. I remember talking to you until we fell asleep and telling you I love you, because I truly got addicted to how cute you are. Those early phone calls and video chats are memories I'll always cherish, and I know we'll keep making more. Today's Date: February 11, 2026. We are actually in the middle of a fight right now, so I wanted to remind you of all this. It's funny-it's 11:53 PM, and I'm writing this while looking at you right now on video call.",
+            m2: "All the memories I’ve spent with you are truly beautiful, but even today, there are certain moments that fill my heart with happiness whenever I think about them. Like the time when you used to come to learn scooty riding with your brother, and I would come just to see you. Or the moment I saw you for the first time after we got into a relationship—coming back home and talking about how it felt to see you, how happy and special it made me feel. Then came the day we finally met for the first time. That first wave, that moment—we shared our first kiss, and it was unforgettable. The love in that moment was different, pure, and deeply emotional, a feeling that words can hardly describe. Meeting you at the Dilwali Mela was another one of our best moments. We spent the most time together that day and created memories that will always stay close to my heart. Thank you for coming into my life, for becoming so special to me, and for making me feel emotions I never knew before. I love you so much, my love. ❤️",
+            m3: "Lastly, I want to say sorry for any time I may have misbehaved with you. I’m trying to control myself, but sometimes because I care too much, I become over-protective, and my anger comes out quickly. I end up saying more than I should or sounding harsh—and for that, I’m truly sorry. If possible, please forgive me. And if there’s any mistake in these words, forgive your baby as well. I’m not very good at expressing all this, but I honestly tried—just to make you feel a little special and loved. Thank you once again for coming into my life."
+        };
 
-        function typeWriter(text, elementId, btnId, speed = 50) {
-            let i = 0;
-            const elem = document.getElementById(elementId);
-            elem.innerHTML = "";
-            function type() {
-                if (i < text.length) {
-                    elem.innerHTML += text.charAt(i);
-                    i++;
-                    elem.scrollTop = elem.scrollHeight; // Auto-scroll
-                    setTimeout(type, speed);
-                } else {
-                    document.getElementById(btnId).style.display = "inline-block";
-                }
+        // Heart Rain Logic for Entry
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-rain');
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            heart.style.opacity = Math.random();
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+        const rainInterval = setInterval(createHeart, 300);
+
+        function type(id, text, callback) {
+            let i = 0; let el = document.getElementById(id); el.innerHTML = "";
+            function t() { 
+                if (i < text.length) { 
+                    el.innerHTML += text.charAt(i); i++; 
+                    const scrollArea = el.parentElement;
+                    scrollArea.scrollTop = scrollArea.scrollHeight; // Auto scroll
+                    setTimeout(t, 40); 
+                } else if(callback) callback(); 
             }
-            type();
+            t();
         }
 
-        function startExp() {
-            document.getElementById('bgMusic').play();
-            goTo(2);
-            startRain();
-        }
-function goTo(n) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('video').forEach(v => { v.pause(); v.classList.remove('playing'); });
-
-            const current = document.getElementById('page' + n);
-            current.classList.add('active');
-
-            const v = current.querySelector('video');
-            if(v) { 
-                v.play(); 
-                v.classList.add('playing'); 
-            }
-
-            if(n >= 2 && n <= 4) {
-                typeWriter(msgs[n-2], 'type'+(n-1), 'btn'+(n-1));
-            }
-            if(n === 5) initGame();
+        function go() { 
+            clearInterval(rainInterval); // Stop rain after entry if you want
+            document.getElementById("myMusic").play(); 
+            nxt('p1', 'v1', 'm1'); 
         }
 
-        function startRain() {
-            setInterval(() => {
-                const h = document.createElement('div');
-                h.classList.add('heart');
-                h.innerHTML = '❤️';
-                h.style.left = Math.random() * 100 + 'vw';
-                h.style.animationDuration = (Math.random() * 2 + 3) + 's';
-                document.body.appendChild(h);
-                setTimeout(() => h.remove(), 5000);
-            }, 300);
+        function nxt(pId, vId, mId) {
+            document.querySelectorAll('.part').forEach(p => p.classList.remove('active'));
+            document.getElementById(pId).classList.add('active');
+            let v = document.getElementById(vId); 
+            if(v) { v.currentTime = 0; v.play(); }
+            if(mId) setTimeout(() => type(mId, msgList[mId], mId === 'm3' ? showSurprise : null), 600);
+        }
+
+        function showSurprise() {
+            document.getElementById('anni-wish').style.display = 'block';
+            setTimeout(() => { document.getElementById('val-box').style.display = 'block'; }, 1000);
         }
 
         function moveNo() {
-            const b = document.getElementById('no-btn');
-            b.style.left = Math.random() * 70 + 'vw';
-            b.style.top = Math.random() * 70 + 'vh';
+            const btn = document.getElementById('no-btn');
+            btn.style.position = 'fixed';
+            btn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+            btn.style.top = Math.random() * (window.innerHeight - 50) + 'px';
         }
 
-        function initGame() {
-            const canvas = document.getElementById('game');
+        let score = 0;
+        function startGame() {
+            document.getElementById('p3').style.display = 'none';
+            document.getElementById('game-canvas').style.display = 'block';
+            document.getElementById('score-board').style.display = 'block';
+            const canvas = document.getElementById('game-canvas');
             const ctx = canvas.getContext('2d');
-            let score = 0, bx = 125, hearts = [];
-
-            const move = (e) => {
-                let x = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-                bx = x - canvas.offsetLeft - 25;
-            };
-            canvas.addEventListener('mousemove', move);
-            canvas.addEventListener('touchmove', move);
-
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            let hearts = [];
+            function spawn() { hearts.push({ x: Math.random()*canvas.width, y: -50, s: 3+Math.random()*4, size: 30+Math.random()*20 }); }
             function draw() {
-                ctx.clearRect(0, 0, 300, 350);
-                ctx.fillStyle = "#ff4d4d";
-                ctx.fillRect(bx, 330, 50, 10); // Simple Bucket
-
-                if(Math.random() < 0.05) hearts.push({x: Math.random()*280, y: 0});
-                hearts.forEach((h, i) => {
-                    h.y += 4;
-                    ctx.font = "20px Arial";
-                    ctx.fillText("❤️", h.x, h.y);
-                    if(h.y > 330 && h.x > bx && h.x < bx + 50) {
-                        hearts.splice(i, 1);
-                        score++;
-                        document.getElementById('scoreTxt').innerText = Hearts: ${score}/10;
-                        if(score >= 10) goTo(6);
-                    }
+                ctx.clearRect(0,0,canvas.width, canvas.height); 
+                hearts.forEach((h, idx) => { 
+                    h.y += h.s; 
+                    ctx.font = h.size+"px serif"; 
+                    ctx.fillText("❤️", h.x, h.y); 
+                    if(h.y > canvas.height) hearts.splice(idx,1); 
                 });
                 if(score < 10) requestAnimationFrame(draw);
             }
-            draw();
+            canvas.onclick = (e) => { 
+                hearts.forEach((h, idx) => { 
+                    if(Math.abs(e.clientX-h.x)<50 && Math.abs(e.clientY-h.y)<50){ 
+                        hearts.splice(idx,1); 
+                        score++; 
+                        document.getElementById('score').innerText = score; 
+                        if(score>=10) win(); 
+                    } 
+                }); 
+            };
+            // Support for Touch Devices
+            canvas.addEventListener('touchstart', (e) => {
+                const touch = e.touches[0];
+                hearts.forEach((h, idx) => { 
+                    if(Math.abs(touch.clientX-h.x)<50 && Math.abs(touch.clientY-h.y)<50){ 
+                        hearts.splice(idx,1); 
+                        score++; 
+                        document.getElementById('score').innerText = score; 
+                        if(score>=10) win(); 
+                    } 
+                });
+            });
+            setInterval(spawn, 600); draw();
+        }
+        function win() { 
+            document.getElementById('game-canvas').style.display='none'; 
+            document.getElementById('score-board').style.display='none'; 
+            document.getElementById('final-coupon').style.display='block'; 
         }
     </script>
 </body>
