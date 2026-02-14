@@ -7,24 +7,241 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 100vw; font-family: 'Poppins', sans-serif; }
         
-        /* Video Backgrounds */
-        .video-bg { position: fixed; top: 50%; left: 50%; min-width: 100%; min-height: 100%; z-index: -1; transform: translate(-50%, -50%); object-fit: cover; filter: brightness(50%); display: none; }
+        body { 
+            background: #000; 
+            color: #fff; 
+            overflow: hidden; 
+            height: 100vh; 
+            width: 100vw; 
+            font-family: 'Poppins', sans-serif; 
+        }
+
+        /* Video Styling with Fallback Background */
+        .video-bg { 
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            min-width: 100%; 
+            min-height: 100%; 
+            z-index: -1; 
+            transform: translate(-50%, -50%); 
+            object-fit: cover; 
+            filter: brightness(40%); 
+            display: none;
+            background: radial-gradient(circle, #400, #000); /* Black screen se bachne ke liye */
+        }
         .video-bg.active-video { display: block; }
 
-        /* Parts Handling */
-        .part { height: 100vh; width: 100vw; position: absolute; top: 0; left: 0; display: flex; justify-content: center; align-items: center; visibility: hidden; opacity: 0; transition: opacity 0.5s; z-index: 10; }
+        .part { 
+            height: 100vh; 
+            width: 100vw; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            visibility: hidden; 
+            opacity: 0; 
+            transition: opacity 0.5s; 
+            z-index: 10; 
+        }
         .part.active { visibility: visible; opacity: 1; }
         
-        /* Content Box */
-        .content { position: relative; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); padding: 25px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 25px; text-align: center; max-width: 350px; width: 85%; max-height: 60vh; display: flex; flex-direction: column; }
+        .content { 
+            position: relative; 
+            background: rgba(0, 0, 0, 0.5); 
+            backdrop-filter: blur(15px); 
+            padding: 25px; 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 25px; 
+            text-align: center; 
+            max-width: 350px; 
+            width: 85%; 
+            max-height: 60vh; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
         .scroll-area { overflow-y: auto; margin-bottom: 15px; text-align: left; }
         h1 { font-family: 'Brush Script MT', cursive; font-size: 2.2rem; margin-bottom: 10px; color: #ff4d4d; }
         .type-txt { font-size: 0.95rem; line-height: 1.6; color: #fff; }
-        .btn { background: #ff4d4d; color: #fff; border: none; padding: 12px 25px; font-weight: bold; cursor: pointer; border-radius: 50px; margin-top: 10px; transition: 0.3s; }
+        .btn { background: #ff4d4d; color: #fff; border: none; padding: 12px 25px; font-weight: bold; cursor: pointer; border-radius: 50px; margin-top: 10px; }
 
         /* Envelope */
         .envelope-wrapper { cursor: pointer; text-align: center; perspective: 1000px; }
-        .envelope { width: 280px; height: 180px; background: #d2b48c; position: relative; border-radius: 0 0 5px 5px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-        .envelope::before { content: ""; position: absolute; top: 0; left: 0; border-left: 140px solid transparent; border-
+        .envelope { width: 250px; height: 160px; background: #d2b48c; position: relative; border-radius: 0 0 5px 5px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .envelope::before { content: ""; position: absolute; top: 0; left: 0; border-left: 125px solid transparent; border-right: 125px solid transparent; border-top: 90px solid #c5a378; transition: 0.6s; transform-origin: top; z-index: 2; }
+        .open .envelope::before { transform: rotateX(180deg); }
+        .wax-seal { position: absolute; top: 70px; left: 50%; transform: translateX(-50%); width: 45px; height: 45px; background: #8b0000; border-radius: 50%; z-index: 3; display: flex; align-items: center; justify-content: center; color: pink; }
+
+        /* Game & Coupon */
+        #game-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #100; z-index: 100; display: none; }
+        #game-ui { position: fixed; top: 30px; width: 100%; text-align: center; color: white; font-size: 22px; z-index: 101; display: none; }
+        
+        #bouquet-container { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 110; text-align: center; }
+        .realistic-bouquet { font-size: 80px; background: rgba(255,255,255,0.1); padding: 25px; border-radius: 50%; backdrop-filter: blur(10px); animation: float 2s infinite ease-in-out; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        .coupon { background: #fffcf0; border: 5px double #8b0000; padding: 25px; border-radius: 15px; text-align: center; color: #8b0000; display: none; z-index: 120; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 380px; box-shadow: 0 0 50px #000; }
+
+        #confession-page { background: #000; z-index: 200; display: none; flex-direction: column; }
+        .video-box { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 20px; text-align: center; width: 90%; max-width: 350px; }
+        video#finalVideo { width: 100%; border-radius: 15px; }
+    </style>
+</head>
+<body>
+
+    <audio id="myMusic" loop><source src="mylovee.mp3" type="audio/mpeg"></audio>
+
+    <video id="vid1" class="video-bg" loop muted playsinline preload="auto"><source src="video1.mp4" type="video/mp4"></video>
+    <video id="vid2" class="video-bg" loop muted playsinline preload="auto"><source src="video2.mp4" type="video/mp4"></video>
+    <video id="vid3" class="video-bg" loop muted playsinline preload="auto"><source src="video3.mp4" type="video/mp4"></video>
+
+    <div class="part active" id="start-screen">
+        <div class="envelope-wrapper" onclick="openLetter()">
+            <div class="envelope"><div class="wax-seal">❤</div></div>
+            <p style="margin-top: 25px; color: #d2b48c; font-style: italic;">Tap to open, Gaggo...</p>
+        </div>
+    </div>
+
+    <div class="part" id="p1">
+        <div class="content"><h1>Our Beginning ❤️</h1><div class="scroll-area"><p class="type-txt" id="m1"></p></div><button class="btn" id="b1" style="display:none" onclick="changePage('p1', 'p2', 'vid1', 'vid2', 'm2')">Next Memory ❤️</button></div>
+    </div>
+
+    <div class="part" id="p2">
+        <div class="content"><h1>Memories ✨</h1><div class="scroll-area"><p class="type-txt" id="m2"></p></div><button class="btn" id="b2" style="display:none" onclick="changePage('p2', 'p3', 'vid2', 'vid3', 'm3')">Last Page 🎁</button></div>
+    </div>
+
+    <div class="part" id="p3">
+        <div class="content"><h1>Forever Yours 💍</h1><div class="scroll-area"><p class="type-txt" id="m3"></p></div><div id="val-box" style="display:none;"><p style="font-weight:bold; color:#ff4d4d; margin-bottom:10px;">Will you be my Valentine?</p><button class="btn" onclick="startArchery()">YES! 🏹</button></div></div>
+    </div>
+
+    <div id="game-ui">🏹 Score: <span id="score">0</span>/10</div>
+    <canvas id="game-canvas"></canvas>
+
+    <div id="bouquet-container" onclick="revealCoupon()">
+        <div class="realistic-bouquet">💐</div>
+        <p style="margin-top:10px; color:pink; font-weight:bold;">For you... Tap it!</p>
+    </div>
+
+    <div class="coupon" id="final-coupon">
+        <h2>Valentine Pass</h2>
+        <p>"Unlimited hugs, countless kisses, and a lifetime forever stay with Jatin."</p>
+        <button class="btn" onclick="openConfession()">Open My Confession... 🤫</button>
+    </div>
+
+    <div class="part" id="confession-page">
+        <div class="video-box">
+            <h3 style="color:#ff4d4d; margin-bottom:15px; font-family: 'Brush Script MT', cursive;">My Confession...</h3>
+            <video id="finalVideo" playsinline><source src="confession.mp4" type="video/mp4"></video>
+            <button class="btn" onclick="rewatch()">Watch Again 🔄</button>
+        </div>
+    </div>
+
+    <script>
+        const msgList = {
+            m1: "To My Gaggo. This is where it all started. Every second with you is a blessing. First of all, I love you so much! 💋 Today's Date: February 14, 2026. I'm so lucky to have you.",
+            m2: "All the memories I’ve spent with you are truly beautiful. Like the scooty lessons and our first meeting. You make everything special. ❤️",
+            m3: "Lastly, I want to say sorry for any time I was difficult. I love you more than words can say. Happy Anniversary, my love! 🫂💗"
+        };
+
+        function openLetter() {
+            document.querySelector('.envelope-wrapper').classList.add('open');
+            const music = document.getElementById('myMusic');
+            music.play().catch(() => console.log("Music needs interaction"));
+            
+            setTimeout(() => {
+                document.getElementById('start-screen').classList.remove('active');
+                document.getElementById('p1').classList.add('active');
+                playVideo('vid1');
+                type('m1', msgList.m1, 'p1');
+            }, 800);
+        }
+
+        function playVideo(id) {
+            const v = document.getElementById(id);
+            if(v) {
+                v.classList.add('active-video');
+                v.play().catch(() => {
+                    v.parentElement.style.background = "radial-gradient(circle, #400, #000)";
+                });
+            }
+        }
+
+        function changePage(currPart, nextPart, currVid, nextVid, nextMsgId) {
+            document.getElementById(currPart).classList.remove('active');
+            document.getElementById(currVid).classList.remove('active-video');
+            document.getElementById(nextPart).classList.add('active');
+            playVideo(nextVid);
+            type(nextMsgId, msgList[nextMsgId], nextPart);
+        }
+
+        function type(id, text, pId) {
+            let i = 0; let el = document.getElementById(id); el.innerHTML = "";
+            let interval = setInterval(() => {
+                if(i < text.length) {
+                    el.innerHTML += text.charAt(i); i++;
+                    el.parentElement.scrollTop = el.parentElement.scrollHeight;
+                } else {
+                    clearInterval(interval);
+                    if(pId === 'p1') document.getElementById('b1').style.display='inline-block';
+                    if(pId === 'p2') document.getElementById('b2').style.display='inline-block';
+                    if(pId === 'p3') document.getElementById('val-box').style.display='block';
+                }
+            }, 30);
+        }
+
+        function startArchery() {
+            document.getElementById('p3').style.display='none';
+            document.querySelectorAll('.video-bg').forEach(v => v.style.display='none');
+            document.getElementById('game-canvas').style.display='block';
+            document.getElementById('game-ui').style.display='block';
+            
+            const canvas = document.getElementById('game-canvas'); const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            let score = 0, arrows = [], targets = [], bowY = canvas.height/2;
+            
+            window.ontouchmove = (e) => { bowY = e.touches[0].clientY; };
+            canvas.ontouchstart = () => { arrows.push({x: 50, y: bowY}); };
+            
+            let sInt = setInterval(() => targets.push({x: canvas.width-50, y: Math.random()*canvas.height, r: 25}), 1000);
+            
+            function draw() {
+                ctx.clearRect(0,0,canvas.width, canvas.height);
+                ctx.font = "40px serif"; ctx.fillText("🏹", 20, bowY);
+                arrows.forEach((a, ai) => { a.x += 12; ctx.fillText("📍", a.x, a.y); 
+                    targets.forEach((t, ti) => {
+                        if(Math.hypot(a.x-t.x, a.y-t.y) < 35) { score++; arrows.splice(ai,1); targets.splice(ti,1); document.getElementById('score').innerText = score; }
+                    });
+                });
+                targets.forEach(t => ctx.fillText("❤️", t.x, t.y));
+                if(score >= 10) { clearInterval(sInt); win(); return; }
+                requestAnimationFrame(draw);
+            } draw();
+        }
+
+        function win() { 
+            document.getElementById('game-canvas').style.display='none'; 
+            document.getElementById('game-ui').style.display='none'; 
+            document.getElementById('bouquet-container').style.display='block'; 
+        }
+
+        function revealCoupon() { 
+            document.getElementById('bouquet-container').style.display='none'; 
+            document.getElementById('final-coupon').style.display='block'; 
+        }
+
+        function openConfession() { 
+            document.getElementById('final-coupon').style.display='none'; 
+            document.getElementById('myMusic').pause(); 
+            document.getElementById('confession-page').style.display='flex'; 
+            document.getElementById('confession-page').classList.add('active'); 
+            document.getElementById('finalVideo').play(); 
+        }
+
+        function rewatch() { const v = document.getElementById('finalVideo'); v.currentTime = 0; v.play(); }
+    </script>
+</body>
+</html>
