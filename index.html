@@ -9,159 +9,22 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: #000; color: #fff; overflow: hidden; height: 100vh; width: 100vw; font-family: 'Poppins', sans-serif; }
         
-        /* Videos ko pehle se fixed rakha hai taaki swap fast ho */
+        /* Video Backgrounds */
         .video-bg { position: fixed; top: 50%; left: 50%; min-width: 100%; min-height: 100%; z-index: -1; transform: translate(-50%, -50%); object-fit: cover; filter: brightness(50%); display: none; }
         .video-bg.active-video { display: block; }
 
+        /* Parts Handling */
         .part { height: 100vh; width: 100vw; position: absolute; top: 0; left: 0; display: flex; justify-content: center; align-items: center; visibility: hidden; opacity: 0; transition: opacity 0.5s; z-index: 10; }
         .part.active { visibility: visible; opacity: 1; }
         
-        .content { position: relative; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); padding: 25px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 25px; text-align: center; max-width: 350px; width: 85%; max-height: 60vh; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        /* Content Box */
+        .content { position: relative; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); padding: 25px; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 25px; text-align: center; max-width: 350px; width: 85%; max-height: 60vh; display: flex; flex-direction: column; }
         .scroll-area { overflow-y: auto; margin-bottom: 15px; text-align: left; }
         h1 { font-family: 'Brush Script MT', cursive; font-size: 2.2rem; margin-bottom: 10px; color: #ff4d4d; }
         .type-txt { font-size: 0.95rem; line-height: 1.6; color: #fff; }
         .btn { background: #ff4d4d; color: #fff; border: none; padding: 12px 25px; font-weight: bold; cursor: pointer; border-radius: 50px; margin-top: 10px; transition: 0.3s; }
 
-        /* Envelope, Game, Coupon styles same as before */
-        .envelope-wrapper { cursor: pointer; text-align: center; }
-        .envelope { width: 280px; height: 180px; background: #d2b48c; position: relative; border-radius: 0 0 5px 5px; }
-        .envelope::before { content: ""; position: absolute; top: 0; left: 0; border-left: 140px solid transparent; border-right: 140px solid transparent; border-top: 100px solid #c5a378; transition: 0.6s; transform-origin: top; z-index: 2; }
-        .open .envelope::before { transform: rotateX(180deg); }
-        .wax-seal { position: absolute; top: 80px; left: 50%; transform: translateX(-50%); width: 50px; height: 50px; background: #8b0000; border-radius: 50%; z-index: 3; display: flex; align-items: center; justify-content: center; color: pink; }
-
-        #game-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 100; display: none; }
-        #game-ui { position: fixed; top: 30px; width: 100%; text-align: center; color: white; font-size: 22px; z-index: 101; display: none; font-weight: bold; }
-        
-        #bouquet-container { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 110; text-align: center; cursor: pointer; }
-        .realistic-bouquet { font-size: 80px; background: rgba(255,255,255,0.1); padding: 30px; border-radius: 50%; backdrop-filter: blur(10px); animation: float 2s infinite ease-in-out; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-
-        .coupon { background: #fffcf0; border: 5px double #8b0000; padding: 25px; border-radius: 15px; text-align: center; color: #8b0000; display: none; z-index: 120; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 380px; }
-        #confession-page { background: #000; z-index: 200; display: none; flex-direction: column; }
-        .video-box { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 20px; text-align: center; width: 90%; max-width: 350px; }
-        video#finalVideo { width: 100%; border-radius: 15px; }
-    </style>
-</head>
-<body>
-
-    <audio id="myMusic" loop><source src="mylovee.mp3" type="audio/mpeg"></audio>
-
-    <video id="vid1" class="video-bg" loop muted playsinline preload="auto"><source src="video1.mp4" type="video/mp4"></video>
-    <video id="vid2" class="video-bg" loop muted playsinline preload="auto"><source src="video2.mp4" type="video/mp4"></video>
-    <video id="vid3" class="video-bg" loop muted playsinline preload="auto"><source src="video3.mp4" type="video/mp4"></video>
-
-    <div class="part active" id="start-screen">
-        <div class="envelope-wrapper" onclick="openLetter()">
-            <div class="envelope" id="env"><div class="wax-seal">❤</div></div>
-            <p style="margin-top: 20px; color: #d2b48c;">Tap to open your surprise...</p>
-        </div>
-    </div>
-
-    <div class="part" id="p1">
-        <div class="content"><h1>Our Beginning ❤️</h1><div class="scroll-area"><p class="type-txt" id="m1"></p></div><button class="btn" id="b1" style="display:none" onclick="changePage('p1', 'p2', 'vid1', 'vid2', 'm2')">Next Memory ❤️</button></div>
-    </div>
-
-    <div class="part" id="p2">
-        <div class="content"><h1>Memories ✨</h1><div class="scroll-area"><p class="type-txt" id="m2"></p></div><button class="btn" id="b2" style="display:none" onclick="changePage('p2', 'p3', 'vid2', 'vid3', 'm3')">Last Page 🎁</button></div>
-    </div>
-
-    <div class="part" id="p3">
-        <div class="content"><h1>Forever Yours 💍</h1><div class="scroll-area"><p class="type-txt" id="m3"></p></div><div id="val-box" style="display:none;"><p>Will you be my Valentine?</p><button class="btn" onclick="startArchery()">YES! 🏹</button></div></div>
-    </div>
-
-    <div id="game-ui">🏹 Score: <span id="score">0</span>/10</div>
-    <canvas id="game-canvas"></canvas>
-    <div id="bouquet-container" onclick="revealCoupon()"><div class="realistic-bouquet">💐</div><p>For you... Tap it!</p></div>
-    <div class="coupon" id="final-coupon"><h2>Valentine Pass</h2><p>"Unlimited hugs & kisses."</p><button class="btn" onclick="openConfession()">Open My Confession... 🤫</button></div>
-
-    <div class="part" id="confession-page">
-        <div class="video-box">
-            <h3 style="color:#ff4d4d; margin-bottom:10px;">My Confession...</h3>
-            <video id="finalVideo" playsinline><source src="confession.mp4" type="video/mp4"></video>
-            <button class="btn" onclick="document.getElementById('finalVideo').play()">Watch Again 🔄</button>
-        </div>
-    </div>
-
-    <script>
-        const msgList = {
-            m1: "To My Gaggo. This is where it all started. Every second with you is a blessing. First of all, I love you so much! 💋 I know I can be a bit difficult sometimes, but I still love you more than anything. I hope you remember how we first started talking-that 'early days' kind of love. I remember trying so hard to convince you to be with me while you were being your stubborn and picky self, but you were still so wonderful. I remember talking to you until we fell asleep and telling you I love you, because I truly got addicted to how cute you are. Those early phone calls and video chats are memories I'll always cherish, and I know we'll keep making more. Today's Date: February 11, 2026. We are actually in the middle of a fight right now, so I wanted to remind you of all this. It's funny-it's 11:53 PM, and I'm writing this while looking at you right now on video call.",
-            m2: "All the memories I’ve spent with you are truly beautiful, but even today, there are certain moments that fill my heart with happiness whenever I think about them. Like the time when you used to come to learn scooty riding with your brother, and I would come just to see you. Or the moment I saw you for the first time after we got into a relationship—coming back home and talking about how it felt to see you, how happy and special it made me feel. Then came the day we finally met for the first time. That first wave, that moment—we shared our first kiss, and it was unforgettable. The love in that moment was different, pure, and deeply emotional, a feeling that words can hardly describe. Meeting you at the Dilwali Mela was another one of our best moments. We spent the most time together that day and created memories that will always stay close to my heart. Thank you for coming into my life, for becoming so special to me, and for making me feel emotions I never knew before. I love you so much, my love. ❤️",
-            m3: "Lastly, I want to say sorry for any time I may have misbehaved with you. I’m trying to control myself, but sometimes because I care too much, I become over-protective, and my anger comes out quickly. I end up saying more than I should or sounding harsh—and for that, I’m truly sorry. If possible, please forgive me. And if there’s any mistake in these words, forgive your baby as well. I’m not very good at expressing all this, but I honestly tried—just to make you feel a little special and loved. Thank you once again for coming into my life. Happy very first anniversary, my love. 🫂💗"
-        };
-
-        function openLetter() {
-            document.querySelector('.envelope-wrapper').classList.add('open');
-            document.getElementById('myMusic').play();
-            setTimeout(() => {
-                document.getElementById('start-screen').classList.remove('active');
-                document.getElementById('p1').classList.add('active');
-                let v1 = document.getElementById('vid1');
-                v1.classList.add('active-video');
-                v1.play();
-                type('m1', msgList.m1, 'p1');
-            }, 800);
-        }
-
-        function changePage(currPart, nextPart, currVid, nextVid, nextMsgId) {
-            document.getElementById(currPart).classList.remove('active');
-            document.getElementById(currVid).classList.remove('active-video');
-            
-            document.getElementById(nextPart).classList.add('active');
-            let nextV = document.getElementById(nextVid);
-            nextV.classList.add('active-video');
-            nextV.play();
-            
-            type(nextMsgId, msgList[nextMsgId], nextPart);
-        }
-
-        function type(id, text, pId) {
-            let i = 0; let el = document.getElementById(id); el.innerHTML = "";
-            function t() {
-                if(i < text.length){
-                    el.innerHTML += text.charAt(i); i++;
-                    el.parentElement.scrollTop = el.parentElement.scrollHeight;
-                    setTimeout(t, 30);
-                } else {
-                    if(pId === 'p1') document.getElementById('b1').style.display='inline-block';
-                    if(pId === 'p2') document.getElementById('b2').style.display='inline-block';
-                    if(pId === 'p3') document.getElementById('val-box').style.display='block';
-                }
-            } t();
-        }
-
-        // Archery Game, Win, Coupon, Confession Logic
-        function startArchery() {
-            document.getElementById('p3').style.display='none';
-            document.getElementById('vid3').style.display='none';
-            document.getElementById('game-canvas').style.display='block';
-            document.getElementById('game-ui').style.display='block';
-            gameLoop();
-        }
-
-        function gameLoop() {
-            const canvas = document.getElementById('game-canvas'); const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-            let score = 0, arrows = [], targets = [], bowY = canvas.height/2;
-            window.ontouchmove = (e) => { bowY = e.touches[0].clientY; };
-            canvas.ontouchstart = () => { arrows.push({x: 50, y: bowY}); };
-            let sInt = setInterval(() => targets.push({x: canvas.width-50, y: Math.random()*canvas.height, r: 25}), 1000);
-            function draw() {
-                ctx.clearRect(0,0,canvas.width, canvas.height);
-                ctx.font = "40px serif"; ctx.fillText("🏹", 20, bowY);
-                arrows.forEach((a, ai) => { a.x += 10; ctx.fillText("📍", a.x, a.y); 
-                    targets.forEach((t, ti) => {
-                        if(Math.hypot(a.x-t.x, a.y-t.y) < 30) { score++; arrows.splice(ai,1); targets.splice(ti,1); document.getElementById('score').innerText = score; }
-                    });
-                });
-                targets.forEach(t => ctx.fillText("❤️", t.x, t.y));
-                if(score >= 10) { clearInterval(sInt); win(); return; }
-                requestAnimationFrame(draw);
-            } draw();
-        }
-
-        function win() { document.getElementById('game-canvas').style.display='none'; document.getElementById('game-ui').style.display='none'; document.getElementById('bouquet-container').style.display='block'; }
-        function revealCoupon() { document.getElementById('bouquet-container').style.display='none'; document.getElementById('final-coupon').style.display='block'; }
-        function openConfession() { document.getElementById('final-coupon').style.display='none'; document.getElementById('myMusic').pause(); document.getElementById('confession-page').style.display='flex'; document.getElementById('confession-page').classList.add('active'); document.getElementById('finalVideo').play(); }
-    </script>
-</body>
-</html>
+        /* Envelope */
+        .envelope-wrapper { cursor: pointer; text-align: center; perspective: 1000px; }
+        .envelope { width: 280px; height: 180px; background: #d2b48c; position: relative; border-radius: 0 0 5px 5px; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .envelope::before { content: ""; position: absolute; top: 0; left: 0; border-left: 140px solid transparent; border-
